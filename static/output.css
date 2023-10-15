@@ -550,16 +550,8 @@ video {
   margin: 0.5rem;
 }
 
-.mb-2 {
-  margin-bottom: 0.5rem;
-}
-
 .mb-4 {
   margin-bottom: 1rem;
-}
-
-.block {
-  display: block;
 }
 
 .flex {
@@ -568,6 +560,10 @@ video {
 
 .hidden {
   display: none;
+}
+
+.h-16 {
+  height: 4rem;
 }
 
 .h-20 {
@@ -580,10 +576,6 @@ video {
 
 .h-full {
   height: 100%;
-}
-
-.h-16 {
-  height: 4rem;
 }
 
 .w-2\/3 {
@@ -600,15 +592,6 @@ video {
 
 .w-full {
   width: 100%;
-}
-
-.w-fit {
-  width: -moz-fit-content;
-  width: fit-content;
-}
-
-.w-1\/3 {
-  width: 33.333333%;
 }
 
 @keyframes spin {
@@ -653,10 +636,6 @@ video {
   gap: 2rem;
 }
 
-.self-end {
-  align-self: flex-end;
-}
-
 .rounded {
   border-radius: 0.25rem;
 }
@@ -695,19 +674,14 @@ video {
   border-color: rgb(238 238 238 / var(--tw-border-opacity));
 }
 
-.border-cfared {
-  --tw-border-opacity: 1;
-  border-color: rgb(230 14 51 / var(--tw-border-opacity));
-}
-
-.border-black {
-  --tw-border-opacity: 1;
-  border-color: rgb(51 51 51 / var(--tw-border-opacity));
-}
-
 .border-t-darkgray {
   --tw-border-opacity: 1;
   border-top-color: rgb(102 102 102 / var(--tw-border-opacity));
+}
+
+.bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(51 51 51 / var(--tw-bg-opacity));
 }
 
 .bg-lightgray {
@@ -715,29 +689,9 @@ video {
   background-color: rgb(238 238 238 / var(--tw-bg-opacity));
 }
 
-.bg-red-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(239 68 68 / var(--tw-bg-opacity));
-}
-
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.bg-cfared {
-  --tw-bg-opacity: 1;
-  background-color: rgb(230 14 51 / var(--tw-bg-opacity));
-}
-
-.bg-gray {
-  --tw-bg-opacity: 1;
-  background-color: rgb(204 204 204 / var(--tw-bg-opacity));
-}
-
-.bg-black {
-  --tw-bg-opacity: 1;
-  background-color: rgb(51 51 51 / var(--tw-bg-opacity));
 }
 
 .p-1 {
@@ -750,16 +704,6 @@ video {
 
 .p-6 {
   padding: 1.5rem;
-}
-
-.px-2 {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
-
-.py-6 {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
 }
 
 .px-1 {
@@ -787,8 +731,9 @@ video {
   line-height: 1rem;
 }
 
-.font-bold {
-  font-weight: 700;
+.text-cfared {
+  --tw-text-opacity: 1;
+  color: rgb(230 14 51 / var(--tw-text-opacity));
 }
 
 .text-darkgray {
@@ -799,11 +744,6 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.text-cfared {
-  --tw-text-opacity: 1;
-  color: rgb(230 14 51 / var(--tw-text-opacity));
 }
 
 .underline {
