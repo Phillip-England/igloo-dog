@@ -11,7 +11,7 @@ from pages import *
 from utility import *
 from db import *
 
-load_dotenv()
+# load_dotenv()
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="../static"), name="static")
 db_session_maker = get_db_session_maker()
