@@ -136,10 +136,16 @@ def cem_score(request: Request):
 		<div>{score}</div>
 	'''
 
-def form_update_cem_score():
+def form_update_cem_score(err):
+	err_html = ''
+	if err:
+		err_html = f'''<p class='text-xs text-cfared'>{err}<p/>'''
 	return widget_container(f'''
 		<form method="POST" action='/action/update/cem' class='flex flex-col gap-8 w-full'>
-			<h2>Update CEM Scores</h2>
+			<div>
+				<h2 class='mb-4'>Update CEM Scores</h2>
+				{err_html}
+			</div>
 			<div class='flex flex-col gap-6'>
 				<div class='flex flex-row justify-between w-full'>
 					<label for='timescale' class='text-xs'>Timescale:</label>

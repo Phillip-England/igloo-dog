@@ -1,8 +1,9 @@
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.exceptions import RequestValidationError
 
 from components import *
 from pages import *
@@ -37,10 +38,33 @@ async def get_cem_score_html(request: Request):
 	return HTMLResponse(content=cem_score(request))
 
 @app.post('/action/update/cem')
-async def update_cem_scores(request: Request, timescale: str = Form(...), osat: str = Form(...), taste: str = Form(...), speed: str = Form(...), ace: str = Form(...), cleanliness: str = Form(...), accuracy: str = Form(...), password: str = Form(...)):
+async def update_cem_scores(request: Request):
+    form = await request.form()
+    timescale = form.get('timescale')
+    osat = form.get('osat')
+    taste = form.get('taste')
+    speed = form.get('speed')
+    ace = form.get('ace')
+    cleanliness = form.get('cleanliness')
+    accuracy = form.get('accuracy')
+    password = form.get('password')
+    if password != os.getenv('CEM_PASSWORD'):
+        return RedirectResponse(f'/cem?form_update_cem_err=wrong password', status_code=303)
+    if osat == '' or taste == '' or speed == '' or ace == '' or cleanliness == '' or accuracy == '':
+        return RedirectResponse(f'/cem?form_update_cem_err=please fill out all the form fields', status_code=303)
+    try:
+        int(osat)
+        int(taste)
+        int(speed)
+        int(ace)
+        int(cleanliness)
+        int(accuracy)
+    except:
+        return RedirectResponse(f'/cem?form_update_cem_err=fields must contain numbers only', status_code=303)
     real_timescale = ['current_month', 'three_month_rolling', 'year_to_date']
     if timescale not in real_timescale:
-        return RedirectResponse(f'/cem', status_code=303)
+        return RedirectResponse(f'/cem?form_update_cem_err=umm.. whatcha doin?', status_code=303)
+    password = password.lower()
     cem_data = json_read('./data/cem.json')
     filtered_by_timescale = cem_data[timescale]
     filtered_by_timescale['osat'] = osat

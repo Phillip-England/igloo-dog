@@ -19,10 +19,11 @@ def cem_page(request: Request):
 	timescale_variant = request.query_params.get('timescale')
 	if timescale_variant == None:
 		timescale_variant = 'current_month'
+	form_update_cem_err = request.query_params.get('form_update_cem_err')
 	return base_html("CFA Suite | Customer Service", f'''
 		{banner(team_nav_menu())}
 		{cem_widget(timescale_variant)}
-		{form_update_cem_score()}
+		{form_update_cem_score(form_update_cem_err)}
 		{team_footer()}
 	''')
 
