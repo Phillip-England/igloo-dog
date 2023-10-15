@@ -1,0 +1,26 @@
+{
+    "current_month": {
+        "osat": "12",
+        "taste": "12",
+        "ace": "12",
+        "speed": "12",
+        "cleanliness": "12",
+        "accuracy": "12"
+    },
+    "three_month_rolling": {
+        "osat": "77",
+        "taste": "67",
+        "ace": "67",
+        "speed": "99",
+        "cleanliness": "88",
+        "accuracy": "98"
+    },
+    "year_to_date": {
+        "osat": "78",
+        "taste": "88",
+        "ace": "67",
+        "speed": "98",
+        "cleanliness": "88",
+        "accuracy": "98"
+    }
+}
