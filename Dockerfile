@@ -1,5 +1,5 @@
 # Use an official Python image that is compatible with Railway
-FROM python:3.9-slim
+FROM python:3.8
 
 # Set a working directory
 WORKDIR /app
