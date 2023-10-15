@@ -1,7 +1,20 @@
-FROM python:3
+# Use an official Python image that is compatible with Railway
+FROM python:3.9-slim
+
+# Set a working directory
 WORKDIR /app
+
+# Copy your application code and requirements file
 COPY . /app
+
+# Install your application's dependencies
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose the port on which your FastAPI app will run (modify it if your app uses a different port)
 EXPOSE 80
+
+# Change the working directory to your FastAPI app's source code directory
 WORKDIR /app/src
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0"]
+
+# Use uvicorn to start your FastAPI app (modify the entry point if necessary)
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
