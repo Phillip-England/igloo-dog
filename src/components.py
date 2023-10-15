@@ -1,8 +1,9 @@
 import os
 
 from fastapi import Request
+from sqlalchemy.orm import sessionmaker
 
-from utility import json_read
+from db import *
 
 def base_html(title, children):
 	fontawesome_tag = os.getenv('FONTAWESOME_TAG')
@@ -74,7 +75,13 @@ def small_loading_indicator(name, href):
 		</li>
 	'''
 
-def cem_widget(variant):
+def cem_widget(timescale, db_session_maker: sessionmaker):
+	osat = find_cem_score(db_session_maker, os.getenv("SOUTHROADS_ID"), 'osat', timescale)
+	taste = find_cem_score(db_session_maker, os.getenv("SOUTHROADS_ID"), 'taste', timescale)
+	speed = find_cem_score(db_session_maker, os.getenv("SOUTHROADS_ID"), 'speed', timescale)
+	ace = find_cem_score(db_session_maker, os.getenv("SOUTHROADS_ID"), 'ace', timescale)
+	cleanliness = find_cem_score(db_session_maker, os.getenv("SOUTHROADS_ID"), 'cleanliness', timescale)
+	accuracy = find_cem_score(db_session_maker, os.getenv("SOUTHROADS_ID"), 'accuracy', timescale)
 	current_month_path = '/cem'
 	three_month_rolling_path = '/cem?timescale=three_month_rolling'
 	year_to_date_path = '/cem?timescale=year_to_date'
@@ -114,27 +121,36 @@ def cem_widget(variant):
 				</div>			 		
 			</div>
 			<ul class='flex flex-row gap-4 text-xs'>
-				{get_timescale_bar(variant)}
+				{get_timescale_bar(timescale)}
 			</ul>
 			<ul class='text-sm flex flex-col gap-4'>
-				{small_loading_indicator("OSAT", f'/components/cem_score?timescale={variant}&metric=osat')}
-				{small_loading_indicator("Taste", f'/components/cem_score?timescale={variant}&metric=taste')}
-				{small_loading_indicator("Speed", f'/components/cem_score?timescale={variant}&metric=speed')}
-				{small_loading_indicator("Ace", f'/components/cem_score?timescale={variant}&metric=ace')}
-				{small_loading_indicator("Cleanliness", f'/components/cem_score?timescale={variant}&metric=cleanliness')}
-				{small_loading_indicator("Accuracy", f'/components/cem_score?timescale={variant}&metric=accuracy')}
+				<div class='flex flex-row justify-between'>
+					<h2>OSAT</h2>
+					<p>{ osat.score or "" if osat is not None else ""}</p>
+				</div>
+				<div class='flex flex-row justify-between'>
+					<h2>Taste</h2>
+					<p>{ taste.score or "" if taste is not None else ""}</p>
+				</div>
+				<div class='flex flex-row justify-between'>
+					<h2>Speed</h2>
+					<p>{ speed.score or "" if speed is not None else ""}</p>
+				</div>
+				<div class='flex flex-row justify-between'>
+					<h2>Ace</h2>
+					<p>{ ace.score or "" if ace is not None else ""}</p>
+				</div>
+				<div class='flex flex-row justify-between'>
+					<h2>Cleanliness</h2>
+					<p>{ cleanliness.score or "" if cleanliness is not None else ""}</p>
+				</div>
+				<div class='flex flex-row justify-between'>
+					<h2>Accuracy</h2>
+					<p>{ accuracy.score or "" if accuracy is not None else ""}</p>
+				</div>
 			</ul>	 
 		</div>
 	''')
-
-def cem_score(request: Request):
-	cem_data_dict = json_read('./data/cem.json')
-	metric = request.query_params.get('metric')
-	timescale_indicator = request.query_params.get('timescale')
-	score = cem_data_dict[timescale_indicator][metric]
-	return f'''
-		<div>{score}</div>
-	'''
 
 def form_update_cem_score(err):
 	err_html = ''

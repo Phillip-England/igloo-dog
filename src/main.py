@@ -1,5 +1,6 @@
 
 from dotenv import load_dotenv
+from psycopg2 import pool
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -8,12 +9,13 @@ from fastapi.exceptions import RequestValidationError
 from components import *
 from pages import *
 from utility import *
-from data import *
+from db import *
 
 load_dotenv()
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="../static"), name="static")
-create_cem_json()
+db_session_maker = get_db_session_maker()
+create_cem_score_table(db_session_maker)
 
 @app.get("/")
 async def get_login_page_html(request: Request):
@@ -25,7 +27,7 @@ async def get_talent_page_html(request: Request):
 
 @app.get("/cem")
 async def get_cem_page_html(request: Request):
-    return HTMLResponse(content=cem_page(request))
+    return HTMLResponse(content=cem_page(request, db_session_maker))
 
 @app.get("/sales")
 async def get_sales_page_html(request: Request):
@@ -34,10 +36,6 @@ async def get_sales_page_html(request: Request):
 @app.get("/finance")
 async def get_finance_page_html(request: Request):
     return HTMLResponse(content=finance_page())
-
-@app.get('/components/cem_score')
-async def get_cem_score_html(request: Request):
-	return HTMLResponse(content=cem_score(request))
 
 @app.post('/action/update/cem')
 async def update_cem_scores(request: Request):
@@ -50,6 +48,7 @@ async def update_cem_scores(request: Request):
     cleanliness = form.get('cleanliness')
     accuracy = form.get('accuracy')
     password = form.get('password')
+    password = password.lower()
     if password != os.getenv('CEM_PASSWORD'):
         return RedirectResponse(f'/cem?form_update_cem_err=wrong password', status_code=303)
     if osat == '' or taste == '' or speed == '' or ace == '' or cleanliness == '' or accuracy == '':
@@ -66,14 +65,11 @@ async def update_cem_scores(request: Request):
     real_timescale = ['current_month', 'three_month_rolling', 'year_to_date']
     if timescale not in real_timescale:
         return RedirectResponse(f'/cem?form_update_cem_err=umm.. whatcha doin?', status_code=303)
-    password = password.lower()
-    cem_data = json_read('./data/cem.json')
-    filtered_by_timescale = cem_data[timescale]
-    filtered_by_timescale['osat'] = osat
-    filtered_by_timescale['taste'] = taste
-    filtered_by_timescale['speed'] = speed
-    filtered_by_timescale['ace'] = ace
-    filtered_by_timescale['cleanliness'] = cleanliness
-    filtered_by_timescale['accuracy'] = accuracy
-    json_write(cem_data, './data/cem.json')
+    user_id = os.getenv("SOUTHROADS_ID")
+    insert_cem_score(db_session_maker, user_id, 'osat', timescale, osat)
+    insert_cem_score(db_session_maker, user_id, 'taste', timescale, taste)
+    insert_cem_score(db_session_maker, user_id, 'speed', timescale, speed)
+    insert_cem_score(db_session_maker, user_id, 'ace', timescale, ace)
+    insert_cem_score(db_session_maker, user_id, 'cleanliness', timescale, cleanliness)
+    insert_cem_score(db_session_maker, user_id, 'accuracy', timescale, accuracy)
     return RedirectResponse(f'/cem?timescale={timescale}', status_code=303)
