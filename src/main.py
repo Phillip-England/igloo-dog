@@ -8,10 +8,12 @@ from fastapi.exceptions import RequestValidationError
 from components import *
 from pages import *
 from utility import *
+from data import *
 
 load_dotenv()
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="../static"), name="static")
+create_cem_json()
 
 @app.get("/")
 async def get_login_page_html(request: Request):
