@@ -19,7 +19,10 @@ create_cem_score_table(db_session_maker)
 
 @app.get("/")
 async def get_login_page_html(request: Request):
-    return HTMLResponse(content=login_page())
+    try:
+        return HTMLResponse(content=login_page())
+    except Exception as e:
+        print(e)
 
 @app.get("/talent")
 async def get_talent_page_html(request: Request):
